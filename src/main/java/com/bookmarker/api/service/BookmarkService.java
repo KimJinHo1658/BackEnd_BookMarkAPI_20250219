@@ -20,19 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookmarkService {
     private final BookmarkRepository repository;
-    private final BookmarkMapper mapper;
+    //private final BookmarkMapper mapper;
 
     @Transactional(readOnly = true)
-//    public List<Bookmark> getBookmarks(Integer page) {
     public BookmarksDTO getBookmarks(Integer page) {
         int pageNo = page < 1 ? 0 : page - 1;
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "id");
-        //Page<BookMark> => Page<BookmarkDTO>
-        Page<BookmarkDTO> bookmarkPage = repository.findAll(pageable)
-                //map(Funtion) Function의 추상메서드 R apply(T t)
-                //.map(bookmark -> mapper.toDTO(bookmark));
-                //Method Reference
-                .map(mapper::toDTO);
+        Page<BookmarkDTO> bookmarkPage = repository.findBookmarks(pageable);
         return new BookmarksDTO(bookmarkPage);
     }
 }
