@@ -1,6 +1,7 @@
 package com.bookmarker.api.domain;
 
 import com.bookmarker.api.dto.BookmarkDTO;
+import com.bookmarker.api.dto.BookmarkVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,11 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     @Query("""
-    select new com.bookmarker.api.dto.BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
+    select new BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
     """)
-//    @Query("""
-//    select BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
-//    """)
     Page<BookmarkDTO> findBookmarks(Pageable pageable);
 
     //method 명의 Naming 규칙에 따라서 Query문을 자동으로 생성해주는 Query Method
@@ -24,5 +22,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     //Page<BookmarkDTO> searchBookmarks(String query, Pageable pageable);
 
     Page<BookmarkDTO> findByTitleContainsIgnoreCase(String query, Pageable pageable);
+
+    Page<BookmarkVM> findByTitleContainingIgnoreCase(String query, Pageable pageable);
 
 }
